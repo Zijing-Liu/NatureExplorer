@@ -2,6 +2,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const AppError = require('./utils/appError');
+const globalErrorHandler = require('./controllers/errorControllers');
 // upon calling, add a  bunch functions to app
 const app = express();
 
@@ -60,16 +61,7 @@ app.all('*', (req, res, next) => {
   next(new AppError(`cant find ${req.originalUrl} on the server`));
 });
 
-app.use((err, req, res, next) => {
-  // read the status code from the response, a default status code
-  err.statusCode = err.statusCode || 500;
-  err.status = err.status || 'error';
-
-  res.status(err.statusCode).json({
-    status: err.status,
-    message: err.message,
-  });
-});
+app.use(globalErrorHandler);
 // app.route returns a instance of a single route, which can then be used to handle http request
 // we actually create an app for each resource
 module.exports = app;
