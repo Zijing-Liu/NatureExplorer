@@ -21,25 +21,27 @@ const sendErrorProd = (err, res) => {
   } else {
     // log the error to the console so that developers can know the errors
     // 1) log error
-    console.error('ERROR 💥', err);
+    console.error('ERROR 💥');
 
     // 2) Send generic message
     res.status(500).json({
       status: 'error',
-      message: 'Something went very wrong!',
+      message: 'Something went wrong!',
     });
   }
 };
 
 const handleCastErrorDB = (err) => {
   const message = `Invalid ${err.path}: ${err.value}`;
-  console.log('message', message);
-  return new AppError(message, 404);
+  const appError = new AppError(message, 404);
+  return appError;
 };
 const handleDuplicateFieldsDB = (err) => {
   const value = err.keyValue.name;
   const message = `Duplicate field value: ${value}. Please use another value`;
-  return new AppError(message, 400);
+  console.log('handle duplicate fields', appError);
+  const appError = new AppError(message, 400);
+  return appError;
 };
 
 const handleValidationErrorDB = (err) => {
@@ -47,7 +49,9 @@ const handleValidationErrorDB = (err) => {
     el.message;
   });
   const message = `Invalid data input. ${errors.join('. ')}`;
-  return new AppError(message, 404);
+  console.log('handle validation called', appError);
+  const appError = new AppError(message, 400);
+  return appError;
 };
 
 module.exports = (err, req, res, next) => {
@@ -58,14 +62,15 @@ module.exports = (err, req, res, next) => {
   if (process.env.NODE_ENV === 'development') {
     sendErrorDev(err, res);
   } else if (process.env.NODE_ENV === 'production') {
-    console.log(err.name);
     // mark mongoose errors as operational errors so that can be handled globally
     let error = { ...err };
-    // detect the CastError and create a new error from the CastError
-    console.log(err.name);
-    if (error.name === 'CastError') error = handleCastErrorDB(error);
-    if (error.code === '11000') error = handleDuplicateFieldsDB(error);
-    if (error.name === 'ValidatorError') error = handleValidationErrorDB(error);
+    // detect the mongoose errors and create a new AppError from the CastError
+    if (err.name === 'CastError') error = handleCastErrorDB(error);
+    if (err.code === '11000') error = handleDuplicateFieldsDB(error);
+    if (err.name === 'ValidatorError') error = handleValidationErrorDB(error);
+    console.log('logging the err to see operational', error.isOperational);
+    console.log(error);
     sendErrorProd(error, res);
   }
+  next();
 };
