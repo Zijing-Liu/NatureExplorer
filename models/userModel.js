@@ -25,7 +25,7 @@ const userSchema = new mongoose.Schema({
     minlength: 8,
   },
 
-  passwordConfirmed: {
+  passwordConfirm: {
     type: String,
   },
 });
