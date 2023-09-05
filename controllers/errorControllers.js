@@ -22,6 +22,7 @@ const sendErrorProd = (err, res) => {
     // log the error to the console so that developers can know the errors
     // 1) log error
     console.error('ERROR 💥');
+    console.log(err);
 
     // 2) Send generic message
     res.status(500).json({
@@ -33,15 +34,13 @@ const sendErrorProd = (err, res) => {
 
 const handleCastErrorDB = (err) => {
   const message = `Invalid ${err.path}: ${err.value}`;
-  const appError = new AppError(message, 404);
-  return appError;
+  return new AppError(message, 404);
 };
 const handleDuplicateFieldsDB = (err) => {
   const value = err.keyValue.name;
   const message = `Duplicate field value: ${value}. Please use another value`;
   console.log('handle duplicate fields', appError);
-  const appError = new AppError(message, 400);
-  return appError;
+  return new AppError(message, 400);
 };
 
 const handleValidationErrorDB = (err) => {
@@ -50,8 +49,7 @@ const handleValidationErrorDB = (err) => {
   });
   const message = `Invalid data input. ${errors.join('. ')}`;
   console.log('handle validation called', appError);
-  const appError = new AppError(message, 400);
-  return appError;
+  return new AppError(message, 400);
 };
 
 module.exports = (err, req, res, next) => {
@@ -63,14 +61,12 @@ module.exports = (err, req, res, next) => {
     sendErrorDev(err, res);
   } else if (process.env.NODE_ENV === 'production') {
     // mark mongoose errors as operational errors so that can be handled globally
-    let error = { ...err };
+    console.log(err.name);
+    console.log(error.name);
     // detect the mongoose errors and create a new AppError from the CastError
-    if (err.name === 'CastError') error = handleCastErrorDB(error);
-    if (err.code === '11000') error = handleDuplicateFieldsDB(error);
-    if (err.name === 'ValidatorError') error = handleValidationErrorDB(error);
-    console.log('logging the err to see operational', error.isOperational);
-    console.log(error);
+    if (err.name === 'CastError') error = handleCastErrorDB(err);
+    if (err.code === '11000') error = handleDuplicateFieldsDB(err);
+    if (err.name === 'ValidatorError') error = handleValidationErrorDB(err);
     sendErrorProd(error, res);
   }
-  next();
 };
