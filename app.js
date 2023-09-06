@@ -21,12 +21,8 @@ app.use(express.json());
 // since we didn't specify any route, this middleware applies to ever single request
 // it can be run because it is before the request-response cycle of the request handler
 app.use((req, res, next) => {
-  console.log('hello from the middleware!!!! never forget to use next();');
-  // never
-  next();
-});
-app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
+  console.log(req.headers);
   next();
 });
 

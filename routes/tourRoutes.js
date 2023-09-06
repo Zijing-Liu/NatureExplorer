@@ -1,6 +1,8 @@
 const express = require('express');
 const app = express();
 const tourController = require('../controllers/toursController');
+const authController = require('./../controllers/authController');
+
 const router = express.Router();
 app.use('/api/v1/tours', router);
 // params middleware are only running on params
@@ -17,7 +19,7 @@ router.route('/tour-stats').get(tourController.getTourStats);
 router.route('/monthly-plan/:year').get(tourController.getMonthlyPlan);
 router
   .route('/')
-  .get(tourController.getAllTours)
+  .get(authController.protect, tourController.getAllTours)
   .post(tourController.createTour);
 
 router

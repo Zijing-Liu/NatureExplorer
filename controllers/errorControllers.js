@@ -51,7 +51,8 @@ const handleValidationErrorDB = (err) => {
   console.log('handle validation called', appError);
   return new AppError(message, 400);
 };
-
+module.exports = handleJWTError = (err) =>
+  new AppError('Invalid token, please log in again', 401);
 module.exports = (err, req, res, next) => {
   // read the status code from the response, a default status code
   err.statusCode = err.statusCode || 500;
@@ -67,6 +68,7 @@ module.exports = (err, req, res, next) => {
     if (err.name === 'CastError') error = handleCastErrorDB(err);
     if (err.code === '11000') error = handleDuplicateFieldsDB(err);
     if (err.name === 'ValidatorError') error = handleValidationErrorDB(err);
+    if (err.name === 'JsonWebTokenError') error = handleJWTError(err);
     sendErrorProd(error, res);
   }
 };
