@@ -7,7 +7,7 @@ const globalErrorHandler = require('./controllers/errorControllers');
 const app = express();
 
 // 1️⃣  MIDDLEWARE: function to modify the incoming data
-console.log(process.env.ENV_NODE);
+//console.log(process.env.ENV_NODE);
 
 // external middleware
 
@@ -22,7 +22,6 @@ app.use(express.json());
 // it can be run because it is before the request-response cycle of the request handler
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
-  console.log(req.headers);
   next();
 });
 

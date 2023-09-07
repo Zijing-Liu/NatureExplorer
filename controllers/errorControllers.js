@@ -39,7 +39,6 @@ const handleCastErrorDB = (err) => {
 const handleDuplicateFieldsDB = (err) => {
   const value = err.keyValue.name;
   const message = `Duplicate field value: ${value}. Please use another value`;
-  console.log('handle duplicate fields', appError);
   return new AppError(message, 400);
 };
 
@@ -51,8 +50,14 @@ const handleValidationErrorDB = (err) => {
   console.log('handle validation called', appError);
   return new AppError(message, 400);
 };
-module.exports = handleJWTError = (err) =>
-  new AppError('Invalid token, please log in again', 401);
+
+const handleJWTError = () => {
+  return new AppError('Invalid token, please log in again', 401);
+};
+const handleJWTExpiredError = () => {
+  return new AppError('You token has expired, please log in again', 401);
+};
+
 module.exports = (err, req, res, next) => {
   // read the status code from the response, a default status code
   err.statusCode = err.statusCode || 500;
@@ -62,13 +67,13 @@ module.exports = (err, req, res, next) => {
     sendErrorDev(err, res);
   } else if (process.env.NODE_ENV === 'production') {
     // mark mongoose errors as operational errors so that can be handled globally
-    console.log(err.name);
-    console.log(error.name);
+    let error = Object.assign(Object.create(Object.getPrototypeOf(err)), err);
     // detect the mongoose errors and create a new AppError from the CastError
     if (err.name === 'CastError') error = handleCastErrorDB(err);
     if (err.code === '11000') error = handleDuplicateFieldsDB(err);
     if (err.name === 'ValidatorError') error = handleValidationErrorDB(err);
-    if (err.name === 'JsonWebTokenError') error = handleJWTError(err);
+    if (err.name === 'JsonWebTokenError') error = handleJWTError();
+    if (err.name == 'TokenExpiredError') error = handleJWTExpiredError();
     sendErrorProd(error, res);
   }
 };

@@ -39,6 +39,10 @@ const userSchema = new mongoose.Schema({
       message: 'Invalid password',
     },
   },
+  passwordChangedAt: {
+    type: Date,
+    default: Date.now(),
+  },
 });
 
 // use the pre save middleware encrypt the data in the model
@@ -60,6 +64,21 @@ userSchema.methods.correctPassword = function (
   userPassword,
 ) {
   return bcrypt.compare(candidatePassword, userPassword);
+};
+
+// instance methods applying to all the instances of this model
+userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
+  if (this.passwordChangedAt) {
+    // convert the date to a timestamp
+    const changedTimestamp = parseInt(
+      this.passwordChangedAt.getTime() / 1000,
+      10,
+    );
+    console.log(changedTimestamp, JWTTimestamp);
+    return changedTimestamp > JWTTimestamp;
+  }
+  // user has not changed the password by default
+  return false;
 };
 
 // user model has to be instantiated right after the definition of middleware function
