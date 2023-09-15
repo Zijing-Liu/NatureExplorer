@@ -16,6 +16,7 @@ exports.signup = catchAsync(async (req, res, next) => {
   const newUser = await User.create({
     name: req.body.name,
     email: req.body.email,
+    role: req.body.role,
     password: req.body.password,
     passwordConfirm: req.body.passwordConfirm,
   });
@@ -86,3 +87,17 @@ exports.protect = catchAsync(async (req, res, next) => {
   req.user = currentUser;
   next();
 });
+
+// pass the roles as the arguments to the middleware function
+exports.restrictTo = (...roles) => {
+  return (req, res, next) => {
+    // roles ['admin', 'lead-guide'] role = 'user'
+    // restrictTo will only be called after the protect function, which already assigned the currentUser to req
+    if (!roles.includes(req.user.role)) {
+      return next(
+        new AppError('You do not have the permission to perform the action'),
+      );
+    }
+    next();
+  };
+};

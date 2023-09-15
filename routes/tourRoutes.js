@@ -26,6 +26,10 @@ router
   .route('/:id')
   .get(tourController.getTour)
   .patch(tourController.updateTour)
-  .delete(tourController.deleteTour);
-
+  .delete(
+    authController.protect,
+    authController.restrictTo('admin', 'lead-guide'),
+    tourController.deleteTour,
+  );
+// use protect middle to check if the user is logged in; use restrict to prevent unauthorized users to delete tours
 module.exports = router;
