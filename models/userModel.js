@@ -1,3 +1,4 @@
+const crypto = require('crypto');
 const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
@@ -85,6 +86,10 @@ userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
   return false;
 };
 
+userSchema.methods.createPasswordResetToken = function () {
+  const resetToken = crypto.randomBytes(32).toString('hex');
+  crypto.createHash('sha256').update(resetToken).digest('hex');
+};
 // user model has to be instantiated right after the definition of middleware function
 const User = mongoose.model('User', userSchema);
 module.exports = User;

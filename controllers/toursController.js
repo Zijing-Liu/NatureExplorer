@@ -5,7 +5,27 @@ const Tour = require('./../models/tourModel');
 const APIFeatures = require('./../utils/apiFeatures');
 const catchAsync = require('./../utils/catchAsync');
 const AppError = require('../utils/appError');
+const { createClient } = require('redis');
 
+// Create and connect the Redis client
+const redisClient = createClient({
+  host: 'localhost',
+  port: 6379,
+  // legacyMode: true,
+});
+
+// const client = redis.createClient({
+//   legacyMode: true,
+//   PORT: 5001,
+// });
+//redisClient.connect().catch(console.error);
+
+//Handle Redis client connection errors
+// redisClient.on('error', (error) => {
+//   console.error('Redis client error:', error);
+// });
+
+DEFAULT_EXPIRATION = 36000;
 //const tours = JSON.parse(fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`));
 // middleware
 exports.aliasTopTours = (req, res, next) => {
@@ -15,16 +35,30 @@ exports.aliasTopTours = (req, res, next) => {
   req.query.fields = 'name,price,ratingsAverage,summary,difficulty';
   next();
 };
-
+redisClient.connect();
 exports.getAllTours = catchAsync(async (req, res) => {
-  // EXECUTE THE QUERY; chaining the methods
-  const features = new APIFeatures(Tour.find(), req.query)
-    .filter()
-    .sort()
-    .limitFields()
-    .paginate();
-  const tours = await features.query;
-  //console.log(features);
+  // Check if the Redis client is connected
+  // Try to retrieve data from Redis cache
+
+  let tours;
+  let cachedData = await redisClient.get('tours');
+  console.log('cached data');
+  if (cachedData !== null) {
+    // Data exists in Redis cache, parse it as JSON
+    tours = JSON.parse(cachedData);
+  } else {
+    //Data not found in Redis cache, fetch from the database
+    const features = new APIFeatures(Tour.find(), req.query)
+      .filter()
+      .sort()
+      .limitFields()
+      .paginate();
+    tours = await features.query;
+
+    // Store the data in Redis with an expiration time
+    redisClient.setEx('tours', DEFAULT_EXPIRATION, JSON.stringify(tours));
+  }
+
   res.status(200).json({
     status: 'success',
     results: tours.length,

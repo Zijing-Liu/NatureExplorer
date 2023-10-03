@@ -12,11 +12,14 @@
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "cachegoose": "^8.0.0",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^5.13.20",
+    "redis": "^4.6.10",
     "slugify": "^1.6.6",
+    "stripe": "^13.6.0",
     "validator": "^13.11.0"
   },
   "devDependencies": {
