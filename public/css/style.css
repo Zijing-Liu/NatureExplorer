@@ -3,12 +3,12 @@
 }
 
 ::-moz-selection {
-  background-color: #55c57a;
+  background-color: #cd3333;
   color: #fff;
 }
 
 ::selection {
-  background-color: #55c57a;
+  background-color: #f4e7d5;
   color: #fff;
 }
 
@@ -152,18 +152,18 @@ body {
   line-height: 1;
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
-  background-image: -webkit-gradient(
+  /* background-image: -webkit-gradient(
     linear,
     left top,
     right bottom,
-    from(rgba(125, 213, 111, 0.85)),
-    to(rgba(40, 180, 135, 0.85))
-  );
-  background-image: linear-gradient(
+    from(rgba(161, 161, 161, 0.85)),
+    to(rgba(85, 85, 85, 0.85))
+  ); */
+  /* background-image: linear-gradient(
     to bottom right,
-    rgba(125, 213, 111, 0.85),
-    rgba(40, 180, 135, 0.85)
-  );
+    rgba(211, 211, 211, 0.85),
+    rgba(47, 47, 47, 0.85)
+  ); */
 }
 
 .heading-primary {
@@ -219,7 +219,7 @@ body {
 
 .btn:focus {
   outline: none;
-  background-color: #2e864b;
+  background-color: #55554dd9;
 }
 
 .btn--white {
@@ -231,7 +231,7 @@ body {
 }
 
 .btn--green {
-  background-color: #55c57a;
+  background-color: #000000;
   color: #fff;
 }
 .btn--green::after {
@@ -372,11 +372,11 @@ body {
     linear,
     left top,
     right bottom,
-    from(#7dd56f),
-    to(#28b487)
+    from(#cdcdcd),
+    to(#000000)
   );
-  background-image: linear-gradient(to right bottom, #7dd56f, #28b487);
-  opacity: 0.85;
+  background-image: linear-gradient(to right bottom, #cdcdcd, #000000);
+  opacity: 0.6;
 }
 
 .heading-box {
@@ -1078,7 +1078,7 @@ body {
 }
 
 .card {
-  border-radius: 3px;
+  border-radius: 24px;
   overflow: hidden;
   -webkit-box-shadow: 0 1.5rem 4rem rgba(0, 0, 0, 0.1);
   box-shadow: 0 1.5rem 4rem rgba(0, 0, 0, 0.1);
@@ -1100,8 +1100,8 @@ body {
 }
 .card__picture {
   position: relative;
-  -webkit-clip-path: polygon(0 0, 100% 0%, 100% 83%, 0% 98%);
-  clip-path: polygon(0 0, 100% 0%, 100% 83%, 0% 98%);
+  /* -webkit-clip-path: polygon(0 0, 100% 0%, 100% 83%, 0% 98%); */
+  /* clip-path: polygon(0 0, 100% 0%, 100% 83%, 0% 98%); */
   height: 22rem;
 }
 .card__picture-overlay {
@@ -1112,11 +1112,11 @@ body {
     linear,
     left top,
     right bottom,
-    from(#7dd56f),
-    to(#28b487)
+    from(#cdcdcd),
+    to(#000000)
   );
-  background-image: linear-gradient(to right bottom, #7dd56f, #28b487);
-  opacity: 0.7;
+  background-image: linear-gradient(to right bottom, #cdcdcd, #000000);
+  opacity: 0.6;
 }
 .card__picture-img {
   -o-object-fit: cover;
