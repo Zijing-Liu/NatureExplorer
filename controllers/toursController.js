@@ -96,6 +96,18 @@ exports.createTour = catchAsync(async (req, res) => {
     },
   });
 });
+exports.createTours = catchAsync(async (req, res) => {
+  console.log(req[0]);
+  for (var i in req.length) {
+    const newTour = await Tour.create(req[i].body);
+  }
+  res.status(201).json({
+    status: 'success',
+    data: {
+      tour: newTour,
+    },
+  });
+});
 
 exports.updateTour = catchAsync(async (req, res, next) => {
   // query the document and update it

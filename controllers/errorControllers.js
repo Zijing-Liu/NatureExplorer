@@ -1,4 +1,4 @@
-const AppError = require('./../utils/appError');
+const AppError = require('../utils/appError');
 // a global error handling middleware to handle all errors from the app
 
 const sendErrorDev = (err, res) => {

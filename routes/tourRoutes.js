@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const tourController = require('../controllers/toursController');
-const authController = require('./../controllers/authController');
+const authController = require('../controllers/authController');
 const router = express.Router();
 app.use('/api/v1/tours', router);
 // params middleware are only running on params
