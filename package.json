@@ -22,7 +22,8 @@
     "redis": "^4.6.10",
     "slugify": "^1.6.6",
     "stripe": "^13.6.0",
-    "validator": "^13.11.0"
+    "validator": "^13.11.0",
+    "morgan": "1.10.0"  
   },
   "devDependencies": {
     "eslint": "^8.47.0",

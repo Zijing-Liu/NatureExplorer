@@ -9,7 +9,7 @@ const { createClient } = require('redis');
 
 // Create and connect the Redis client
 const redisClient = createClient({
-  host: 'localhost',
+  host: 'celine-redis',
   port: 6379,
   // legacyMode: true,
 });
@@ -48,7 +48,7 @@ exports.getAllTours = catchAsync(async (req, res) => {
     tours = JSON.parse(cachedData);
   } else {
     //Data not found in Redis cache, fetch from the database
-    const features = new APIFeatures(Tour.find(), req.query)
+    const features = new APIFeatures(Tour.find().populate('guides'), req.query)
       .filter()
       .sort()
       .limitFields()
